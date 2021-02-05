@@ -1,41 +1,39 @@
-const conteudo = document.getElementById('conteudo')
+const pesquisa = document.getElementById('pesquisa')
+pesquisa.focus()
+const main = document.getElementById('main')
+
 
 function loadlivros() {
-    if (conteudo.innerHTML != "") {
-        conteudo.innerHTML = "" 
-        loadlivrosContent()
+    if (main.innerHTML != "") {
+        main.innerHTML = "" 
+        loadlivrosContent() 
     } else {
-        loadlivrosContent()
+        loadlivrosContent()   
     }
 
 }
 
-function loadlivrosContent() {
-    
+function loadlivrosContent() {  
 
-//APAGAR ISSO DEPOIS:
-//verificar se consegue escrever uma função que substitui undefined deixando o campo hidden ou algo assim
-//adicionar preço
-//Design responsivo
-//Animação carregamento
-
-
-
-    var busca = document.getElementById("Input").value
-    var tipo = document.getElementById("selec").value
-    
-    
-
-  
+    var busca = document.getElementById('pesquisa').value
+    var tipo = document.getElementById('selec').value      
         
         let url = `https://www.googleapis.com/books/v1/volumes?q=+${tipo}:${busca}&key=AIzaSyDxrAniSAvumfVDVPizI6cYywwqTmrcU-8`
-        
+        let loader = `      
+        <div class="demo-card-square mdl-card mdl-shadow--2dp" align="center" style="margin-top: 10px; width:33%; justify-content:center; align-items:center" > 
+            <p>Carregando...</p>
+            <progress id="progress" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></progress>  
+            
+        </div>         
+        `     
+        main.innerHTML = loader            
+
         fetch(url).then((response) => {
             return response.json()
-        }).then((data) => {
-            console.log(data)
-            for (let i = 0; i <= data.items.length; i++) {
-                conteudo.innerHTML +=        
+        }).then((data) => { 
+            main.innerHTML = ""                          
+            for (let i = 0; i <= data.items.length; i++) {                
+                main.innerHTML +=        
                     `<div class="demo-card-wide mdl-card mdl-shadow--2dp" align="center" style="width:49%; justify-content:center; align-items:center">
                     <img id="thumbnail" src="${data.items[i].volumeInfo.imageLinks.thumbnail}" style="width:200px;">
                     <p id="title" class="hi">
@@ -48,7 +46,7 @@ function loadlivrosContent() {
                         Categoria: ${data.items[i].volumeInfo.categories}
                     </p>
                     <p id="autor" class="hi">
-                    Avaliação média: ${data.items[i].volumeInfo.averageRating + "/5"}
+                    Avaliação média: ${data.items[i].volumeInfo.averageRating + " de 5"}
                     </p>
                     <p id="autor" class="hi">
                         Autor: ${data.items[i].volumeInfo.authors}
@@ -59,7 +57,7 @@ function loadlivrosContent() {
                     <p id="desc" style="text-align:justify">
                         Descrição: ${data.items[i].volumeInfo.description}
                     </p>
-                    <div id="moreinfo">
+                    <div id="moreinfo" style= "display: flex; justify-content: center; flex-wrap: wrap;">
                     <a href="${data.items[i].volumeInfo.infoLink}" class="link" target="_blank">
                         Mais Informações
                     </a>
@@ -70,15 +68,14 @@ function loadlivrosContent() {
                         Link de Compra
                     </a>
                     </div>
-                    </>`
-            }
-            
+                    </>`                                        
+            }                   
         }) 
 }
 
-document.getElementById("Input").addEventListener("keyup", function (event) {
+document.getElementById('pesquisa').addEventListener('keyup', function (event) {
     if (event.keyCode === 13) {
         event.preventDefault();
-        document.getElementById("srcbtn").click();
+        document.getElementById('srcbtn').click();
     }
 });
